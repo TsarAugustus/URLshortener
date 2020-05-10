@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const URL = new Schema({
-  url: String,
-  urlReq: String
+  originalUrl: String,
+  shortenedUrl: String
 });
 
-module.exports = mongoose.model('post', Post);
+module.exports = mongoose.model('url', URL);
