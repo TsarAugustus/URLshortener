@@ -1,0 +1,10 @@
+doctype html
+head
+body
+  h1 URL Shortener
+  div
+    form(action="/api/genUrl", method="post", enctype="application/x-www-form-urlencoded")
+      div
+        label(for="title") Enter URL
+        input(type="text", id="url", name="url", required)
+      button(type="submit") Shorten
