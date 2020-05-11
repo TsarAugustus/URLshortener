@@ -17,6 +17,9 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/url', {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.set('useCreateIndex', true);
 
+//Simpy for the style sheet
+app.use(express.static(path.join(__dirname, 'public')));
+
 //view engine stuff
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', '.pug');
