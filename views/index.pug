@@ -2,6 +2,8 @@ doctype html
 head
 body
   h1 URL Shortener
+  if url
+    h2 #{url}
   div
     form(action="/api/genUrl", method="post", enctype="application/x-www-form-urlencoded")
       div

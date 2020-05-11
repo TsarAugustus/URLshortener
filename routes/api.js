@@ -10,16 +10,19 @@ router.post('/genUrl', function(req, res) {
   let expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
   let regex = new RegExp(expression);
   let input = req.body.url;
+  let shortUrl;
+
+  console.log(req.body.url + '1')
 
   if (input.match(regex)) {
+    console.log(req.body.url + '2')
     //search if original url
-    console.log('Finding url');
+    //console.log('Finding url');
     URL.findOne({originalUrl: req.body.url}, function(err, url) {
-      console.log(url);
-      let shortUrl;
+      
       if (url) {
-        console.log('Url found ' + url.originalUrl);
         shortUrl = url.shortenedUrl;
+        req.session.url = url.shortenedUrl;
       }
 
       if(!url) {
@@ -31,31 +34,32 @@ router.post('/genUrl', function(req, res) {
           let result = '';
           for (let i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
           let newURL = new URL();
-          newURL.originalUrl = req.body.url;
+
+          //See if the url has http/s in the url, if not, add it (needed for res.redirect)
+          if(!req.body.url.indexOf('http://') || !req.body.url.indexOf('https://')) {
+            console.log('Has Http/s');
+            newURL.originalUrl = req.body.url;
+          } else {
+            console.log('No http/s');
+            newURL.originalUrl = 'http://' + req.body.url;
+          }
+
+          //create short url, add it to the session so it can be displayed at the index
           newURL.shortenedUrl = result;
+          req.session.url = newURL.shortenedUrl;
           newURL.save(function(err) {
             if(err) throw err;
-            //console.log('saved');
           });
-          shortUrl = result;
-          //console.log(result);
         }
       }
-      console.log(shortUrl);
-      return res.redirect('/' + shortUrl);
+      return res.redirect('/');
     });
 
-
-
-    //push url and shortened url to model and database
-
   } else {
-    //Reject, as it isn't a real url
+    req.session.url = "Adjust and resubmit URL";
     console.log("Resubmit URL");
+    return res.redirect('/');
   }
-  //console.log(req.body);
-
-  // return res.redirect('/');
 });
 
 module.exports = router;

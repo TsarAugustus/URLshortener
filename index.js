@@ -1,8 +1,16 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const session = require('express-session');
 const path = require('path');
 const app = express();
 const port = 3000;
+
+//session for express
+app.use(session({
+  secret: 'url',
+  resave: false,
+  saveUninitialized: true
+}));
 
 //database connection
 const mongoose = require('mongoose');
